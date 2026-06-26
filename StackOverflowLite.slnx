@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="StackOverflowLite.API/StackOverflowLite.API.csproj" />
+  <Project Path="StackOverflowLite.Application/StackOverflowLite.Application.csproj" />
+  <Project Path="StackOverflowLite.Domain/StackOverflowLite.Domain.csproj" />
+  <Project Path="StackOverflowLite.Infrastructure/StackOverflowLite.Infrastructure.csproj" />
+  <Project Path="StackOverflowLite.Persistence/StackOverflowLite.Persistence.csproj" />
+</Solution>
