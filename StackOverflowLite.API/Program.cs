@@ -53,30 +53,30 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    /* c.SwaggerDoc("v1", new OpenApiInfo {Title = "StackOverflow Lite", Version = "v1"});
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo {Title = "StackOverflow Lite", Version = "v1"});
+    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
-        Name = "Authorization", Type = SecuritySchemeType.Http,
+        Name = "Authorization", Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
         Scheme = "Bearer", BearerFormat = "JWT",
-        In = ParameterLocation.Header
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header
     });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
     {
         {
-            new OpenApiSecurityScheme 
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme 
             { 
-                Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "Bearer"}
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference {Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme, Id = "Bearer"}
             }, [] 
         }
-    }); */
+    });
 });
 
 
 
 var app = builder.Build();
 
-// app.UseSwagger();
-// app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();

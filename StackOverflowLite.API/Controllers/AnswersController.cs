@@ -30,6 +30,31 @@ public class AnswersController(ISender mediator) : ControllerBase
         var command = new AcceptAnswerCommand(questionId, answerId, userId);
         return Ok(await mediator.Send(command));
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAnswers(Guid questionId)
+    {
+        return Ok(await mediator.Send(new StackOverflowLite.Application.Features.Answers.Queries.GetAnswersByQuestion.GetAnswersByQuestionQuery(questionId)));
+    }
+
+    [HttpPut("{answerId}")]
+    [Authorize]
+    public async Task<IActionResult> UpdateAnswer(Guid questionId, Guid answerId, [FromBody] UpdateAnswerRequest request)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        var command = new StackOverflowLite.Application.Features.Answers.Commands.UpdateAnswer.UpdateAnswerCommand(answerId, request.Content, userId);
+        return Ok(await mediator.Send(command));
+    }
+
+    [HttpDelete("{answerId}")]
+    [Authorize]
+    public async Task<IActionResult> DeleteAnswer(Guid questionId, Guid answerId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        var command = new StackOverflowLite.Application.Features.Answers.Commands.DeleteAnswer.DeleteAnswerCommand(answerId, userId);
+        return Ok(await mediator.Send(command));
+    }
 }
 
 public record CreateAnswerRequest(string Content);
+public record UpdateAnswerRequest(string Content);

@@ -13,7 +13,10 @@ public class GetQuestionsQueryHandler(IAppDbContext dbContext, ICacheService cac
 {
     public async Task<List<QuestionDto>> Handle(GetQuestionsQuery request, CancellationToken cancellationToken)
     {
-        var cacheKey = "questions_list";
+        var cacheKey = string.IsNullOrWhiteSpace(request.Tag) 
+            ? "questions_list" 
+            : $"questions_list_tag_{request.Tag.ToLower()}";
+
         var cachedQuestions = await cacheService.GetAsync<List<QuestionDto>>(cacheKey);
 
         if (cachedQuestions != null)
@@ -21,10 +24,18 @@ public class GetQuestionsQueryHandler(IAppDbContext dbContext, ICacheService cac
             return cachedQuestions;
         }
 
-        var questions = await dbContext.Questions
+        var query = dbContext.Questions
             .Include(q => q.Author)
             .Include(q => q.QuestionTags)
                 .ThenInclude(qt => qt.Tag)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(request.Tag))
+        {
+            query = query.Where(q => q.QuestionTags.Any(qt => qt.Tag.Name.ToLower() == request.Tag.ToLower()));
+        }
+
+        var questions = await query
             .OrderByDescending(q => q.CreatedAt)
             .ToListAsync(cancellationToken);
 

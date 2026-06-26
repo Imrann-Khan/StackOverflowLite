@@ -16,9 +16,9 @@ namespace StackOverflowLite.API.Controllers;
 public class QuestionsController(ISender mediator) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetQuestions()
+    public async Task<IActionResult> GetQuestions([FromQuery] string? tag)
     {
-        return Ok(await mediator.Send(new GetQuestionsQuery()));
+        return Ok(await mediator.Send(new GetQuestionsQuery(tag)));
     }
 
     [HttpGet("{id}")]
@@ -35,6 +35,25 @@ public class QuestionsController(ISender mediator) : ControllerBase
         var command = new CreateQuestionCommand(request.Title, request.Content, request.Tags, userId);
         return Ok(await mediator.Send(command));
     }
+
+    [HttpPut("{id}")]
+    [Authorize]
+    public async Task<IActionResult> UpdateQuestion(Guid id, [FromBody] UpdateQuestionRequest request)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        var command = new StackOverflowLite.Application.Features.Questions.Commands.UpdateQuestion.UpdateQuestionCommand(id, request.Title, request.Content, request.Tags, userId);
+        return Ok(await mediator.Send(command));
+    }
+
+    [HttpDelete("{id}")]
+    [Authorize]
+    public async Task<IActionResult> DeleteQuestion(Guid id)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        var command = new StackOverflowLite.Application.Features.Questions.Commands.DeleteQuestion.DeleteQuestionCommand(id, userId);
+        return Ok(await mediator.Send(command));
+    }
 }
 
 public record CreateQuestionRequest(string Title, string Content, List<string> Tags);
+public record UpdateQuestionRequest(string Title, string Content, List<string> Tags);

@@ -5,7 +5,7 @@ namespace StackOverflowLite.Application.Features.Answers.Dtos;
 public record AnswerDto(
     Guid Id,
     string Content,
-    string AuthorUsername,
+    string AuthorName,
     bool IsAccepted,
     DateTime CreatedAt,
     Guid QuestionId);
