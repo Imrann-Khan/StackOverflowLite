@@ -1,4 +1,4 @@
-namespace StackOverflowLite.Domain.Model;
+namespace StackOverflowLite.Domain.Entities;
 public class QuestionTag
 {
     public Guid QuestionId { get; set; }

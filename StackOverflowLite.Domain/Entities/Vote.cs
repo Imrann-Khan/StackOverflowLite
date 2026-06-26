@@ -1,4 +1,4 @@
-namespace StackOverflowLite.Domain.Model;
+namespace StackOverflowLite.Domain.Entities;
 
 
 public enum VoteType

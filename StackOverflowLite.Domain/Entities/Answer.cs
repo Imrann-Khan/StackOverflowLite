@@ -1,6 +1,4 @@
-using StackOverflowLite.Domain.Model;
-
-namespace StackOverflowLite.Domain;
+namespace StackOverflowLite.Domain.Entities;
 
 public class Answer
 {

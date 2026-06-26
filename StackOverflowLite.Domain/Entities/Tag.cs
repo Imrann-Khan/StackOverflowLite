@@ -1,4 +1,4 @@
-namespace StackOverflowLite.Domain.Model;
+namespace StackOverflowLite.Domain.Entities;
 public class Tag
 {
     public Guid Id { get; set; } = Guid.NewGuid();

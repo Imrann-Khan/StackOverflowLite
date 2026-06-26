@@ -1,12 +1,13 @@
-namespace StackOverflowLite.Domain.Model;
+namespace StackOverflowLite.Domain.Entities;
 
 public class Question
 {
     public Guid Id {get; set;} = Guid.NewGuid();
     public string Title {get; set;} = string.Empty;
     public string Description {get; set;} = string.Empty;
+    public int ViewCount { get; set; } = 0;  // tracked in Redis, persisted here
     public DateTime CreatedAt {get; set;} = DateTime.UtcNow;
-    public DateTime UpdateddAt {get; set;}
+    public DateTime? UpdatedAt {get; set;}
 
     // Foreign Key
     public string AuthorId {get; set;} = string.Empty;
