@@ -28,8 +28,9 @@ public class AcceptAnswerCommandHandler(IAppDbContext dbContext) : IRequestHandl
             throw new KeyNotFoundException("Answer not found");
 
         if (answer.IsAccepted)
-            return true; 
+            throw new Exception("This answer is already accepted");
 
+        // If another answer was previously accepted, unmark it and deduct points
         var previousAccepted = question.Answers.FirstOrDefault(a => a.IsAccepted);
         if (previousAccepted != null)
         {
@@ -38,15 +39,15 @@ public class AcceptAnswerCommandHandler(IAppDbContext dbContext) : IRequestHandl
             if (prevAuthor != null) prevAuthor.Reputation -= 15;
         }
 
+        // Mark the new answer as accepted and award points
         answer.IsAccepted = true;
+        question.AcceptedAnswerId = answer.Id;
         
         var author = await dbContext.Users.FindAsync(new object[] { answer.AuthorId }, cancellationToken);
         if (author != null)
         {
             author.Reputation += 15;
         }
-
-        question.AcceptedAnswerId = answer.Id;
 
         await dbContext.SaveChangesAsync(cancellationToken);
 

@@ -122,6 +122,7 @@ Most endpoints require authentication. You must first register and log in to rec
 - **POST `/api/questions/{questionId}/answers`**: Post an answer to a question (requires Auth).
 - **GET `/api/questions/{questionId}/answers`**: List all answers for a specific question.
 - **POST `/api/questions/{questionId}/answers/{answerId}/accept`**: Mark an answer as the "Accepted Answer". Only the author of the question can do this.
+- **POST `/api/questions/{questionId}/answers/{answerId}/unaccept`**: Unmark an accepted answer. Only the author of the question can do this.
 
 ### 4. Voting & Reputation
 Users can Upvote (+5 for Questions, +10 for Answers) or Downvote (-1 for Questions, -2 for Answers) content.

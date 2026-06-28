@@ -14,36 +14,35 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<Tag> Tags => Set<Tag>();
     public DbSet<QuestionTag> QuestionTags => Set<QuestionTag>();
 
-    // MUST be override — without this keyword EF Core never calls this method!
+    // Database Table Constraints
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
-        // QuestionTag — composite primary key (many-to-many join table)
+        // Composite primary key 
         builder.Entity<QuestionTag>()
             .HasKey(qt => new { qt.QuestionId, qt.TagId });
 
-        // Tag name must be unique across the platform
+        // Tag name must be unique
         builder.Entity<Tag>()
             .HasIndex(t => t.Name)
             .IsUnique();
 
-        // Question → AcceptedAnswer: nullable FK, use SetNull not Cascade
-        // (Cascade here would cause circular delete cycle with Answer → Question)
+        // AcceptedAnswer nullable FK
         builder.Entity<Question>()
             .HasOne(q => q.AcceptedAnswer)
             .WithMany()
             .HasForeignKey(q => q.AcceptedAnswerId)
             .OnDelete(DeleteBehavior.SetNull);
 
-        // Answer → Question: cascade delete answers when question deleted
+        // cascade delete answers when question deleted
         builder.Entity<Answer>()
             .HasOne(a => a.Question)
             .WithMany(q => q.Answers)
             .HasForeignKey(a => a.QuestionId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Vote → Question: nullable FK (vote is on question OR answer, not both)
+        // nullable FK
         builder.Entity<Vote>()
             .HasOne(v => v.Question)
             .WithMany(q => q.Votes)
@@ -51,7 +50,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired(false);
 
-        // Vote → Answer: nullable FK
+        // nullable FK
         builder.Entity<Vote>()
             .HasOne(v => v.Answer)
             .WithMany(a => a.Votes)

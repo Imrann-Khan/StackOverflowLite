@@ -31,6 +31,15 @@ public class AnswersController(ISender mediator) : ControllerBase
         return Ok(await mediator.Send(command));
     }
 
+    [HttpPost("{answerId}/unaccept")]
+    [Authorize]
+    public async Task<IActionResult> UnacceptAnswer(Guid questionId, Guid answerId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        var command = new StackOverflowLite.Application.Features.Answers.Commands.UnacceptAnswer.UnacceptAnswerCommand(questionId, answerId, userId);
+        return Ok(await mediator.Send(command));
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetAnswers(Guid questionId)
     {
